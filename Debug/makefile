@@ -3,9 +3,7 @@
 # Toolchain: GNU Tools for STM32 (11.3.rel1)
 ################################################################################
 
--include ../makefile.init
-
-RM := rm -rf
+-RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
@@ -52,16 +50,14 @@ default.size.stdout \
 OBJDUMP_LIST += \
 blink.list \
 
-
-# All Target
-all: main-build
 # All Target
 all: main-build blink.bin
+
 # Main-build Target
 main-build: blink.elf secondary-outputs
 
 # Tool invocations
-blink.elf blink.map: $(OBJS) $(USER_OBJS) /home/pc/Desktop/projet_Stm32/blink/STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+blink.elf blink.map: $(OBJS) $(USER_OBJS) ../STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-gcc -o "blink.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/pc/Desktop/projet_Stm32/blink/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="blink.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
