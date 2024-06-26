@@ -55,7 +55,8 @@ blink.list \
 
 # All Target
 all: main-build
-
+# All Target
+all: main-build blink.bin
 # Main-build Target
 main-build: blink.elf secondary-outputs
 
