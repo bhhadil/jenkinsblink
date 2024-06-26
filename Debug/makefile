@@ -3,7 +3,7 @@
 # Toolchain: GNU Tools for STM32 (11.3.rel1)
 ################################################################################
 
--RM := rm -rf
+RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
@@ -30,7 +30,6 @@ OPTIONAL_TOOL_DEPS := \
 $(wildcard ../makefile.defs) \
 $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
-
 
 BUILD_ARTIFACT_NAME := blink
 BUILD_ARTIFACT_EXTENSION := elf
@@ -62,6 +61,12 @@ blink.elf blink.map: $(OBJS) $(USER_OBJS) ../STM32F407VGTX_FLASH.ld makefile obj
 	@echo 'Finished building target: $@'
 	@echo ' '
 
+# Add a rule to generate .bin file
+blink.bin: blink.elf
+	arm-none-eabi-objcopy -O binary "blink.elf" "blink.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-size  $(EXECUTABLES)
 	@echo 'Finished building: $@'
@@ -74,7 +79,7 @@ blink.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 
 # Other Targets
 clean:
-	-$(RM) blink.elf blink.list blink.map default.size.stdout
+	-$(RM) blink.elf blink.list blink.map default.size.stdout blink.bin
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
@@ -89,3 +94,4 @@ warn-no-linker-script-specified:
 .PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified
 
 -include ../makefile.targets
+
